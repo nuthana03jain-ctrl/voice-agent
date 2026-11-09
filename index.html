@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Basic page setup -->
+  <meta charset="UTF-8">
+  <!-- Makes the page scale properly on phones -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>5 Cool Animations</title>
+  <!-- Link to our stylesheet (all the looks + animations live here) -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="page-header">
+    <h1>5 Cool Animations</h1>
+    <p class="subtitle">Three text effects and two button effects, built with plain HTML, CSS and a little JavaScript.</p>
+  </header>
+
+  <!-- The grid that holds all 5 cards -->
+  <main class="grid">
+
+    <!-- ===================== 1. TYPEWRITER ===================== -->
+    <section class="card">
+      <span class="badge">Text · CSS only</span>
+      <h2>1. Typewriter</h2>
+
+      <div class="demo">
+        <p class="typewriter">Hello, animations!</p>
+      </div>
+
+      <div class="explain">
+        <h3>How it works</h3>
+        <p>The text starts with a <strong>width of 0</strong> and <code>overflow: hidden</code>, so it's invisible. A <code>@keyframes</code> animation grows the width to full size.</p>
+        <p>The trick is <code>steps(18)</code>: instead of growing smoothly, the width jumps in 18 steps, one per letter, so it looks like typing. A right border that blinks on and off is the cursor.</p>
+        <pre><code>animation: typing 4s steps(18) infinite;</code></pre>
+      </div>
+    </section>
+
+    <!-- ===================== 2. GRADIENT SHINE ===================== -->
+    <section class="card">
+      <span class="badge">Text · CSS only</span>
+      <h2>2. Gradient Shine</h2>
+
+      <div class="demo">
+        <p class="shine">Shimmer</p>
+      </div>
+
+      <div class="explain">
+        <h3>How it works</h3>
+        <p>We paint a colorful <strong>gradient background</strong> that's much wider than the text (<code>background-size: 200%</code>).</p>
+        <p><code>background-clip: text</code> cuts the background into the shape of the letters, and the text color is made transparent so the gradient shows through. The animation slides the background sideways, so the colors flow across the word.</p>
+        <pre><code>background-clip: text;
+animation: shine 3s linear infinite;</code></pre>
+      </div>
+    </section>
+
+    <!-- ===================== 3. WAVY LETTERS ===================== -->
+    <section class="card">
+      <span class="badge">Text · CSS + JS</span>
+      <h2>3. Wavy Letters</h2>
+
+      <div class="demo">
+        <!-- JavaScript will split this text into one <span> per letter -->
+        <p class="wavy" id="wavy-text">Wavy Text</p>
+      </div>
+
+      <div class="explain">
+        <h3>How it works</h3>
+        <p>CSS can't animate single letters, so a few lines of <strong>JavaScript</strong> wrap each letter in its own <code>&lt;span&gt;</code>.</p>
+        <p>Every span runs the same "jump up and back down" animation, but each one gets a slightly bigger <code>animation-delay</code>. Because they start at different moments, the letters move one after another like a wave.</p>
+        <pre><code>span.style.animationDelay = (i * 0.1) + 's';</code></pre>
+      </div>
+    </section>
+
+    <!-- ===================== 4. FILL-UP BUTTON ===================== -->
+    <section class="card">
+      <span class="badge">Button · CSS only</span>
+      <h2>4. Fill-Up Button</h2>
+
+      <div class="demo">
+        <button class="btn-fill">Hover me</button>
+      </div>
+
+      <div class="explain">
+        <h3>How it works</h3>
+        <p>The button has a hidden extra layer made with <code>::before</code> (a <em>pseudo-element</em>). It's squashed to zero width with <code>transform: scaleX(0)</code>.</p>
+        <p>On <code>:hover</code> we change it to <code>scaleX(1)</code>. A <code>transition</code> makes that change glide over 0.4 seconds, so the color "pours" in from the left. The text color changes at the same time.</p>
+        <pre><code>.btn-fill:hover::before { transform: scaleX(1); }</code></pre>
+      </div>
+    </section>
+
+    <!-- ===================== 5. RIPPLE BUTTON ===================== -->
+    <section class="card">
+      <span class="badge">Button · CSS + JS</span>
+      <h2>5. Ripple Click</h2>
+
+      <div class="demo">
+        <button class="btn-ripple" id="ripple-btn">Click me</button>
+      </div>
+
+      <div class="explain">
+        <h3>How it works</h3>
+        <p>When you click, <strong>JavaScript</strong> works out exactly where your mouse was inside the button and creates a small circle <code>&lt;span&gt;</code> there.</p>
+        <p>A CSS <code>@keyframes</code> animation grows the circle (<code>scale</code>) while fading it out (<code>opacity</code>). When the animation ends, JavaScript removes the circle so they don't pile up.</p>
+        <pre><code>circle.style.left = (e.clientX - rect.left) + 'px';</code></pre>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="page-footer">
+    <p>Tip: if your device has "reduce motion" turned on, these animations slow down or stop. That's on purpose.</p>
+  </footer>
+
+  <!-- Load JavaScript last, so all the HTML above already exists -->
+  <script src="script.js"></script>
+</body>
+</html>
