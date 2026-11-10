@@ -20,48 +20,48 @@
   :root {
     --ink: #0b0b0b;
     --paper: #ffffff;
-    --soft: #f4f2ee;
+    --soft: #f5f2ec;
     --muted: #5e5e5e;
-    --line: #e6e3dd;
+    --line: #e4e0d8;
     --accent: #FF5B14;
     --accent-ink: #C43F00;   /* darker accent for small text on white */
-    /* panel colours: accent family + friendly companions */
+    --accent-tint: #FFC9B0;  /* soft accent for decorative numbers */
+    /* project panel colours: accent + calm companions */
     --p1: #FF5B14;
-    --p2: #FFC21A;
-    --p3: #B9A6FF;
-    --p4: #8FE3B4;
+    --p2: #E9DECB;
+    --p3: #A9C79B;
+    --p4: #1A1A1A;
+    --p5: #6E8BEB;
     --display: "Bagel Fat One", "Arial Black", system-ui, sans-serif;
     --body: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
     --ease: cubic-bezier(.22, 1, .36, 1);
     --gutter: clamp(16px, 4vw, 48px);
+    /* avatar colours (overridden from SITE.avatar) */
+    --skin: #C98E68;
+    --skin-shade: #A9704E;
+    --hair: #1E1512;
+    --top: #FF5B14;
   }
   * { box-sizing: border-box; }
   html { scroll-behavior: smooth; }
   body {
-    margin: 0;
-    background: var(--paper);
-    color: var(--ink);
-    font-family: var(--body);
-    font-size: 17px;
-    line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
-    overflow-x: hidden;
+    margin: 0; background: var(--paper); color: var(--ink);
+    font-family: var(--body); font-size: 17px; line-height: 1.6;
+    -webkit-font-smoothing: antialiased; overflow-x: hidden;
   }
   img { max-width: 100%; display: block; }
   a { color: inherit; }
   h1, h2, h3 { margin: 0; line-height: 1.05; }
   .wrap { max-width: 1200px; margin: 0 auto; padding: 0 var(--gutter); }
-  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   :focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
 
   /* ---------- Nav ---------- */
   .nav {
     position: fixed; inset: 0 0 auto 0; z-index: 50;
     display: flex; align-items: center; justify-content: space-between;
-    padding: 16px var(--gutter);
-    transition: background .3s, box-shadow .3s;
+    padding: 16px var(--gutter); transition: background .3s, box-shadow .3s;
   }
-  .nav.scrolled { background: rgba(255,255,255,.88); backdrop-filter: blur(10px); box-shadow: 0 1px 0 var(--line); }
+  .nav.scrolled { background: rgba(255,255,255,.9); backdrop-filter: blur(10px); box-shadow: 0 1px 0 var(--line); }
   .logo { font-family: var(--display); font-size: 22px; text-decoration: none; letter-spacing: .5px; }
   .logo span { color: var(--accent); }
   .nav ul { display: flex; gap: 28px; list-style: none; margin: 0; padding: 0; align-items: center; }
@@ -80,86 +80,71 @@
   .pill:hover { background: var(--accent); transform: translateY(-2px); }
   @media (max-width: 720px) { .nav ul li:not(:last-child) { display: none; } }
 
-  /* ---------- Hero ---------- */
-  .hero {
-    min-height: 100svh;
-    display: grid; place-items: center;
-    padding: 110px var(--gutter) 60px;
-    position: relative;
-    text-align: center;
+  /* ---------- Hero: letters tumbling around the avatar ---------- */
+  .hero { padding: clamp(84px, 11vw, 120px) var(--gutter) 0; overflow: hidden; }
+  .stage {
+    position: relative; width: min(1100px, 100%); margin: 0 auto;
+    aspect-ratio: 11 / 6.6; container-type: inline-size;
   }
-  .hero-kicker {
-    font-weight: 500; letter-spacing: .18em; text-transform: uppercase; font-size: 13px; color: var(--muted);
-    margin-bottom: clamp(12px, 3vw, 28px);
+  .stage h1 { position: absolute; inset: 0; font-weight: 400; }
+  .L {
+    position: absolute; left: var(--x); top: var(--y);
+    font-family: var(--display); font-size: var(--s); line-height: .8;
+    transform: rotate(var(--r)); transform-origin: 50% 70%;
+    opacity: 0; animation: pop .9s var(--ease) forwards; animation-delay: calc(var(--i) * 70ms + 150ms);
+    transition: transform .45s var(--ease), color .25s; cursor: default; user-select: none;
+    z-index: 1;
   }
-  .word {
-    font-family: var(--display); font-weight: 400;
-    display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-end;
-    line-height: .85; letter-spacing: -.01em;
-    font-size: clamp(64px, 17vw, 240px);
-    user-select: none;
-  }
-  .word .ch {
-    display: inline-block;
-    transform: translateY(var(--y, 0)) rotate(var(--r, 0deg)) scale(var(--s, 1));
-    transform-origin: 50% 80%;
-    opacity: 0;
-    animation: pop .9s var(--ease) forwards;
-    animation-delay: calc(var(--i) * 70ms + 150ms);
-    transition: transform .4s var(--ease), color .25s;
-    cursor: default;
-  }
-  .word .ch:hover { transform: translateY(calc(var(--y, 0) - 10px)) rotate(calc(var(--r, 0deg) * -1)) scale(var(--s, 1)); color: var(--accent); }
-  .word .yr { color: var(--accent); font-size: .62em; margin-left: .08em; align-self: flex-start; }
-  .word .yr:hover { color: var(--ink); }
+  .L:hover { transform: rotate(calc(var(--r) * -1)) translateY(-.06em); color: var(--accent); }
+  .L.yr { color: var(--accent); }
+  .L.yr:hover { color: var(--ink); }
+  .L.front { z-index: 3; }
   @keyframes pop {
-    0% { opacity: 0; transform: translateY(60px) rotate(0deg) scale(.6); }
-    100% { opacity: 1; transform: translateY(var(--y, 0)) rotate(var(--r, 0deg)) scale(var(--s, 1)); }
+    0% { opacity: 0; transform: translateY(.5em) rotate(0) scale(.6); }
+    100% { opacity: 1; transform: rotate(var(--r)); }
   }
-  .hero-illustration { max-width: min(520px, 80vw); margin: 0 auto 8px; display: none; animation: fadeUp 1s var(--ease) both; }
-  .hero-illustration.on { display: block; }
-  .hero-sub {
-    margin: clamp(20px, 4vw, 40px) auto 0; max-width: 560px;
-    font-size: clamp(17px, 2vw, 20px); color: var(--muted);
-    animation: fadeUp 1s var(--ease) .9s both;
+  .hero-name {
+    position: absolute; left: 5%; top: 74%; z-index: 3;
+    font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--accent-ink);
+    font-size: clamp(12px, 1.9cqw, 22px); animation: fadeUp 1s var(--ease) 1s both;
   }
-  .hero-sub strong { color: var(--ink); }
-  .scroll-cue {
-    position: absolute; bottom: 24px; left: 50%; translate: -50% 0;
-    width: 26px; height: 42px; border: 2px solid var(--ink); border-radius: 20px;
-    animation: fadeUp 1s var(--ease) 1.3s both;
+  .hero-role {
+    position: absolute; right: 3%; top: 82%; z-index: 3; max-width: 25%;
+    font-size: clamp(11px, 1.45cqw, 16px); color: var(--muted); text-align: right; line-height: 1.4;
+    animation: fadeUp 1s var(--ease) 1.15s both;
   }
-  .scroll-cue::after {
-    content: ""; position: absolute; left: 50%; top: 8px; width: 4px; height: 8px; margin-left: -2px;
-    background: var(--accent); border-radius: 2px; animation: cue 1.8s ease-in-out infinite;
+  .avatar {
+    position: absolute; left: 50%; bottom: 0; width: 46%; z-index: 2;
+    translate: -50% 0; animation: rise 1.2s var(--ease) .45s both;
   }
-  @keyframes cue { 0%,100% { transform: translateY(0); opacity: 1; } 60% { transform: translateY(12px); opacity: 0; } }
-  @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
-
-  /* little decorative sparkles around the hero word */
-  .spark { position: absolute; font-family: var(--display); color: var(--accent); pointer-events: none; animation: float 6s ease-in-out infinite; }
-  .spark.s1 { top: 18%; left: 9%; font-size: 40px; }
-  .spark.s2 { top: 26%; right: 10%; font-size: 26px; color: var(--ink); animation-delay: -2s; }
-  .spark.s3 { bottom: 20%; left: 14%; font-size: 22px; color: var(--ink); animation-delay: -4s; }
-  .spark.s4 { bottom: 24%; right: 13%; font-size: 34px; animation-delay: -1s; }
-  @keyframes float { 0%,100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-14px) rotate(20deg); } }
-  @media (max-width: 600px) { .spark.s1, .spark.s3 { display: none; } }
+  .avatar svg, .avatar img { width: 100%; height: auto; display: block; }
+  .avatar .bob { animation: bob 5s ease-in-out 1.8s infinite; transform-origin: 50% 100%; transform-box: fill-box; }
+  .avatar .eyes { animation: blink 4.5s infinite; transform-origin: 50% 50%; transform-box: fill-box; }
+  @keyframes rise { from { opacity: 0; transform: translateY(18%); } to { opacity: 1; transform: none; } }
+  @keyframes bob { 0%,100% { transform: rotate(0); } 50% { transform: rotate(-1.6deg); } }
+  @keyframes blink { 0%, 93%, 100% { transform: scaleY(1); } 96% { transform: scaleY(.1); } }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+  /* phones: taller stage, PORT on top, folio around the avatar (positions from --m* vars) */
+  @media (max-width: 600px) {
+    .hero { padding-bottom: 46px; }
+    .stage { aspect-ratio: 1 / 1.12; }
+    .L { left: var(--mx); top: var(--my); font-size: var(--ms); }
+    .avatar { width: 70%; }
+    .hero-role { display: none; }
+    .hero-name { top: auto; bottom: -34px; left: 0; right: 0; text-align: center; font-size: 13px; }
+  }
 
   /* ---------- Scroll reveal ---------- */
   .reveal { opacity: 0; transform: translateY(36px); transition: opacity .9s var(--ease), transform .9s var(--ease); }
   .reveal.in { opacity: 1; transform: none; }
-
-  section { padding: clamp(72px, 11vw, 140px) 0; }
+  section { padding: clamp(72px, 10vw, 130px) 0; }
   .eyebrow { font-weight: 700; font-size: 13px; letter-spacing: .18em; text-transform: uppercase; color: var(--accent-ink); margin: 0 0 14px; }
 
-  /* ---------- About / ID card ---------- */
-  .about { display: grid; grid-template-columns: minmax(260px, 380px) 1fr; gap: clamp(40px, 8vw, 110px); align-items: start; }
-  .lanyard-wrap { display: flex; justify-content: center; margin-top: -40px; }
-  .lanyard {
-    position: relative; width: 280px;
-    transform-origin: 50% 0;
-    animation: swing 3.2s cubic-bezier(.36,.07,.19,.97) .3s both;
-  }
+  /* ---------- About / lanyard ID card ---------- */
+  #about { border-top: 1.5px solid var(--ink); }
+  .about { display: grid; grid-template-columns: minmax(250px, 340px) 1fr; gap: clamp(40px, 8vw, 110px); align-items: center; }
+  .lanyard-wrap { display: flex; justify-content: center; margin-top: calc(-1 * clamp(72px, 10vw, 130px)); }
+  .lanyard { position: relative; width: 260px; transform-origin: 50% 0; animation: swing 3.2s cubic-bezier(.36,.07,.19,.97) .3s both; }
   .lanyard.again { animation: swing-soft 2.2s cubic-bezier(.36,.07,.19,.97) both; }
   @keyframes swing {
     0% { transform: rotate(14deg); } 18% { transform: rotate(-10deg); } 36% { transform: rotate(6.5deg); }
@@ -169,170 +154,175 @@
     0% { transform: rotate(0); } 20% { transform: rotate(6deg); } 42% { transform: rotate(-4deg); }
     64% { transform: rotate(2deg); } 84% { transform: rotate(-.8deg); } 100% { transform: rotate(0); }
   }
-  .strap { display: block; margin: 0 auto; width: 70px; height: 170px; }
+  .strap { display: block; margin: 0 auto; width: 76px; height: 190px; }
   .clip {
-    width: 44px; height: 30px; margin: -6px auto 0; position: relative; z-index: 2;
-    background: linear-gradient(#d9d9d9, #9a9a9a); border-radius: 6px 6px 10px 10px;
-    box-shadow: inset 0 -3px 0 rgba(0,0,0,.2);
+    width: 40px; height: 26px; margin: -6px auto 0; position: relative; z-index: 2;
+    background: linear-gradient(#e2e2e2, #9c9c9c); border-radius: 6px 6px 10px 10px; box-shadow: inset 0 -3px 0 rgba(0,0,0,.18);
   }
-  .clip::after { content: ""; position: absolute; left: 50%; bottom: -10px; width: 14px; height: 16px; margin-left: -7px; border: 4px solid #9a9a9a; border-top: 0; border-radius: 0 0 10px 10px; }
+  .clip::after { content: ""; position: absolute; left: 50%; bottom: -10px; width: 14px; height: 16px; margin-left: -7px; border: 4px solid #9c9c9c; border-top: 0; border-radius: 0 0 10px 10px; }
+  /* clear plastic badge holder */
   .card {
-    margin-top: 6px; background: var(--paper); border: 2.5px solid var(--ink); border-radius: 22px;
-    padding: 16px 16px 20px; box-shadow: 8px 10px 0 var(--ink); position: relative;
+    margin-top: 6px; padding: 12px; border-radius: 18px; position: relative;
+    background: linear-gradient(135deg, rgba(255,255,255,.75), rgba(235,240,245,.55));
+    border: 1.5px solid rgba(0,0,0,.18);
+    box-shadow: 0 24px 40px -18px rgba(0,0,0,.35), inset 0 0 0 4px rgba(255,255,255,.7);
   }
-  .card::before { content: ""; position: absolute; top: 12px; left: 50%; width: 52px; height: 9px; margin-left: -26px; border-radius: 9px; background: var(--soft); border: 2px solid var(--ink); }
-  .card-head { display: flex; justify-content: space-between; align-items: center; font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; margin: 20px 4px 12px; }
-  .card-head b { color: var(--accent-ink); }
-  .photo {
-    aspect-ratio: 4 / 4.4; border-radius: 14px; overflow: hidden; background: var(--accent);
-    display: grid; place-items: center; position: relative;
-  }
+  .card::before { content: ""; position: absolute; top: 8px; left: 50%; width: 46px; height: 7px; margin-left: -23px; border-radius: 7px; background: rgba(0,0,0,.12); }
+  .card::after { content: ""; position: absolute; inset: 0; border-radius: 18px; pointer-events: none; background: linear-gradient(115deg, transparent 35%, rgba(255,255,255,.55) 45%, transparent 55%); }
+  .id { background: var(--paper); border-radius: 10px; overflow: hidden; margin-top: 12px; border: 1.5px solid var(--ink); }
+  .photo { aspect-ratio: 4 / 4.6; background: var(--accent); display: grid; place-items: center; overflow: hidden; }
   .photo img { width: 100%; height: 100%; object-fit: cover; }
-  .photo .initials { font-family: var(--display); font-size: 92px; color: var(--paper); }
-  .card-name { font-family: var(--display); font-size: 30px; margin: 14px 4px 2px; line-height: 1; }
-  .card-role { margin: 0 4px; font-size: 14px; color: var(--muted); }
-  .card-foot { display: flex; justify-content: space-between; align-items: flex-end; margin: 14px 4px 0; }
-  .barcode { height: 30px; flex: 0 0 120px; background: repeating-linear-gradient(90deg, var(--ink) 0 2px, transparent 2px 4px, var(--ink) 4px 7px, transparent 7px 9px, var(--ink) 9px 10px, transparent 10px 13px); }
-  .card-foot span { font-family: var(--display); font-size: 22px; color: var(--accent); }
+  .photo .initials { font-family: var(--display); font-size: 88px; color: var(--paper); }
+  .id-meta { padding: 10px 12px 12px; display: flex; justify-content: space-between; align-items: end; gap: 8px; }
+  .id-meta b { display: block; font-family: var(--display); font-weight: 400; font-size: 24px; line-height: 1; }
+  .id-meta small { font-size: 12px; color: var(--muted); }
+  .id-meta span { font-family: var(--display); font-size: 18px; color: var(--accent); }
 
-  .about-text h2 { font-family: var(--display); font-weight: 400; font-size: clamp(44px, 7vw, 84px); letter-spacing: -.01em; }
+  .about-text h2 { font-family: var(--display); font-weight: 400; font-size: clamp(44px, 6.5vw, 80px); letter-spacing: -.01em; }
+  .about-text h2 em { font-style: normal; color: var(--accent); }
   .about-text h2 .wave { display: inline-block; transform-origin: 70% 70%; animation: wave 2.4s ease-in-out 1.2s 2; }
   @keyframes wave { 0%,60%,100% { transform: rotate(0); } 10%,30% { transform: rotate(14deg); } 20%,40% { transform: rotate(-8deg); } }
-  .about-text h2 em { font-style: normal; color: var(--accent); }
-  .headline { font-size: clamp(19px, 2.2vw, 23px); font-weight: 500; margin: 18px 0 22px; }
-  .about-text p { max-width: 620px; }
-  .about-text p + p { margin-top: 0; }
-  .stickers { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
-  .sticker { border: 2px solid var(--ink); border-radius: 999px; padding: 6px 14px; font-weight: 500; font-size: 14px; transition: transform .3s var(--ease), background .3s; }
+  .headline { font-size: clamp(19px, 2.2vw, 23px); font-weight: 500; margin: 16px 0 18px; }
+  .about-text p { max-width: 640px; }
+  .stickers { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+  .sticker { border: 2px solid var(--ink); border-radius: 999px; padding: 6px 14px; font-weight: 500; font-size: 14px; transition: transform .3s var(--ease), background .3s, color .3s; }
   .sticker:nth-child(odd) { transform: rotate(-2deg); }
   .sticker:nth-child(even) { transform: rotate(2deg); }
   .sticker:hover { transform: rotate(0) translateY(-3px); background: var(--accent); color: var(--paper); border-color: var(--accent); }
-
   @media (max-width: 820px) {
     .about { grid-template-columns: 1fr; }
-    .lanyard-wrap { margin-top: -60px; }
-    .about-text { text-align: left; }
   }
 
-  /* ---------- Info block ---------- */
-  .info { background: var(--ink); color: var(--paper); border-radius: clamp(24px, 4vw, 44px); margin: 0 var(--gutter); }
-  .info .wrap { padding-top: 0; padding-bottom: 0; }
-  .cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(32px, 5vw, 64px); }
-  .col h3 { font-family: var(--display); font-weight: 400; font-size: 30px; margin-bottom: 26px; display: flex; align-items: center; gap: 12px; }
-  .col h3 i { font-style: normal; width: 34px; height: 34px; border-radius: 50%; background: var(--accent); display: grid; place-items: center; font-size: 15px; font-family: var(--body); font-weight: 700; color: var(--ink); }
-  .item { padding: 16px 0; border-top: 1px solid rgba(255,255,255,.16); }
-  .item:last-child { border-bottom: 1px solid rgba(255,255,255,.16); }
-  .item b { display: block; font-weight: 700; }
-  .item span { color: rgba(255,255,255,.66); font-size: 15px; }
-  .item small { display: block; color: var(--accent); font-weight: 700; font-size: 13px; letter-spacing: .06em; margin-bottom: 2px; }
-  .contact-list { list-style: none; margin: 0; padding: 0; }
-  .contact-list a {
-    display: flex; align-items: center; gap: 14px; text-decoration: none; padding: 14px 0;
-    border-top: 1px solid rgba(255,255,255,.16); transition: color .25s, padding .35s var(--ease);
-    word-break: break-word;
+  /* ---------- Info block: three columns with dividers ---------- */
+  #info { padding-top: 0; }
+  .cols { display: grid; grid-template-columns: repeat(3, 1fr); }
+  .col { padding: 8px clamp(20px, 3vw, 40px); }
+  .col + .col { border-left: 1.5px solid var(--line); }
+  .col:first-child { padding-left: 0; }
+  .col:last-child { padding-right: 0; }
+  .col h3 {
+    font-family: var(--body); font-weight: 700; font-size: 15px; letter-spacing: .16em; text-transform: uppercase;
+    margin-bottom: 22px; display: flex; align-items: center; gap: 10px;
   }
-  .contact-list li:last-child a { border-bottom: 1px solid rgba(255,255,255,.16); }
-  .contact-list a:hover { color: var(--accent); padding-left: 8px; }
-  .ico { flex: 0 0 42px; height: 42px; border-radius: 12px; background: rgba(255,255,255,.08); display: grid; place-items: center; transition: background .25s; }
-  .contact-list a:hover .ico { background: var(--accent); color: var(--ink); }
-  .ico svg { width: 20px; height: 20px; }
-  .contact-list .lbl { display: block; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.55); }
-  .tools { margin-top: clamp(48px, 6vw, 72px); display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
-  .tools h3 { font-family: var(--display); font-weight: 400; font-size: 30px; margin-right: 14px; }
-  .tool { padding: 8px 16px; border-radius: 999px; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.16); font-size: 15px; font-weight: 500; transition: background .25s, color .25s, transform .3s var(--ease); }
-  .tool:hover { background: var(--paper); color: var(--ink); transform: translateY(-3px) rotate(-2deg); }
-  @media (max-width: 900px) { .cols { grid-template-columns: 1fr; } }
+  .col h3 i { font-style: normal; color: var(--accent-ink); }
+  .item { padding: 12px 0; transition: transform .35s var(--ease); }
+  .item:hover { transform: translateX(6px); }
+  .item b { display: block; font-weight: 700; line-height: 1.35; }
+  .item span { display: block; color: var(--muted); font-size: 14px; }
+  .item small { display: block; color: var(--accent-ink); font-weight: 700; font-size: 12px; letter-spacing: .06em; }
+  .contact-list { list-style: none; margin: 0; padding: 0; }
+  .contact-list a { display: flex; align-items: center; gap: 12px; text-decoration: none; padding: 9px 0; font-size: 15px; word-break: break-word; transition: color .25s; }
+  .contact-list a:hover { color: var(--accent-ink); }
+  .ico { flex: 0 0 38px; height: 38px; border-radius: 10px; background: var(--ink); color: var(--paper); display: grid; place-items: center; transition: background .25s, transform .35s var(--ease); }
+  .contact-list a:hover .ico { background: var(--accent); transform: rotate(-8deg); }
+  .ico svg { width: 18px; height: 18px; }
+  .tools-h { margin-top: 34px !important; }
+  .tools { display: flex; flex-wrap: wrap; gap: 8px; }
+  .tool { padding: 6px 13px; border-radius: 999px; background: var(--soft); border: 1.5px solid var(--line); font-size: 14px; font-weight: 500; transition: background .25s, color .25s, transform .3s var(--ease), border-color .25s; }
+  .tool:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); transform: translateY(-3px) rotate(-2deg); }
+  @media (max-width: 900px) {
+    .cols { grid-template-columns: 1fr; gap: 28px; }
+    .col, .col:first-child, .col:last-child { padding: 0; }
+    .col + .col { border-left: 0; border-top: 1.5px solid var(--line); padding-top: 28px; }
+  }
 
   /* ---------- Work title ---------- */
-  .work-head { position: relative; text-align: center; padding: clamp(30px, 6vw, 70px) 0 clamp(50px, 8vw, 90px); }
+  .work-head { position: relative; text-align: center; padding: clamp(30px, 6vw, 70px) 0 clamp(40px, 7vw, 80px); }
   .outline {
     font-family: var(--display); font-weight: 400;
     font-size: clamp(76px, 19vw, 260px); line-height: .9; letter-spacing: .01em;
-    color: transparent; -webkit-text-stroke: 2.5px var(--ink);
-    transition: color .5s var(--ease);
+    color: transparent; -webkit-text-stroke: 2px #cfcac1; transition: color .5s var(--ease), -webkit-text-stroke-color .5s;
   }
-  .outline:hover { color: var(--ink); }
-  .work-head p { margin: 16px auto 0; color: var(--muted); max-width: 480px; }
-  .num {
-    position: absolute; font-family: var(--display); line-height: 1; pointer-events: none;
-    transform: rotate(var(--r));
-  }
-  .num.n1 { top: 4%;  left: 6%;  font-size: clamp(40px, 7vw, 96px);  color: var(--accent); --r: -14deg; }
-  .num.n2 { top: 0;   right: 9%; font-size: clamp(28px, 4.5vw, 60px); --r: 12deg; color: transparent; -webkit-text-stroke: 2px var(--ink); }
-  .num.n3 { bottom: 14%; left: 14%; font-size: clamp(26px, 4vw, 54px); --r: 8deg; color: transparent; -webkit-text-stroke: 2px var(--ink); }
-  .num.n4 { bottom: 8%; right: 4%;  font-size: clamp(46px, 8vw, 110px); --r: -9deg; color: var(--accent); }
-  .num.n5 { top: 44%; left: -1%;  font-size: clamp(18px, 2.4vw, 30px); --r: -22deg; }
-  .num.n6 { top: 40%; right: 0;   font-size: clamp(18px, 2.4vw, 30px); --r: 24deg; }
+  .outline:hover { color: var(--ink); -webkit-text-stroke-color: var(--ink); }
+  .work-head p { margin: 14px auto 0; color: var(--muted); max-width: 480px; }
+  .num { position: absolute; font-family: var(--display); line-height: 1; pointer-events: none; color: var(--accent-tint); font-size: clamp(30px, 5.5vw, 76px); }
+  .num.n1 { top: 24%; left: 9%; }
+  .num.n2 { top: 46%; left: 27%; }
+  .num.n3 { top: 4%;  left: 44%; }
+  .num.n4 { top: 44%; left: 62%; }
+  .num.n5 { top: 12%; right: 8%; }
 
   /* ---------- Project panels ---------- */
-  .panels { display: flex; gap: clamp(12px, 1.6vw, 20px); height: clamp(520px, 72vh, 680px); }
-  .panel {
-    flex: 1 1 0; min-width: 0; position: relative; overflow: hidden;
-    border: 2.5px solid var(--ink); border-radius: 28px; background: var(--c);
-    cursor: pointer; text-align: left; color: var(--ink); font: inherit; padding: 0;
-    display: flex; flex-direction: column;
-    transition: flex-grow .6s var(--ease), transform .5s var(--ease), box-shadow .5s var(--ease);
+  .projects { display: flex; gap: clamp(10px, 1.4vw, 18px); }
+  .proj {
+    flex: 1 1 0; min-width: 0; background: none; border: 0; padding: 0; margin: 0;
+    font: inherit; color: var(--ink); text-align: left; cursor: pointer;
+    transition: flex-grow .6s var(--ease);
   }
-  .panel:hover, .panel:focus-visible { flex-grow: 1.35; transform: translateY(-8px); box-shadow: 0 14px 0 var(--ink); }
-  .panel .pnum { font-family: var(--display); font-size: clamp(54px, 6vw, 88px); line-height: 1; padding: 22px 22px 0; }
-  .panel .ptitle { font-family: var(--display); font-weight: 400; font-size: clamp(24px, 2.4vw, 32px); padding: 8px 22px 0; line-height: 1.05; }
-  .panel .ptag { padding: 8px 22px 0; font-size: 15px; font-weight: 500; opacity: .82; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-  .panel .shot {
-    margin: auto 16px 16px; border: 2px solid var(--ink); border-radius: 16px; overflow: hidden;
-    background: var(--paper); aspect-ratio: 4 / 3.2; position: relative;
+  .proj:hover, .proj:focus-visible { flex-grow: 1.4; }
+  .panel {
+    position: relative; overflow: hidden; height: clamp(440px, 60vh, 580px);
+    background: var(--c); border-radius: 18px;
+    transition: transform .5s var(--ease), box-shadow .5s var(--ease);
+  }
+  .proj:hover .panel, .proj:focus-visible .panel { transform: translateY(-8px); box-shadow: 0 22px 40px -22px rgba(0,0,0,.45); }
+  .big {
+    position: absolute; left: 50%; bottom: -.1em; translate: -50% 0;
+    font-family: var(--display); font-size: clamp(130px, 15vw, 230px); line-height: .9; color: var(--paper);
     transition: transform .6s var(--ease);
   }
-  .panel:hover .shot { transform: rotate(-2deg) scale(1.02); }
-  .shot img { width: 100%; height: 100%; object-fit: cover; object-position: top center; }
-  .shot .mock { position: absolute; inset: 0; padding: 12px; display: flex; flex-direction: column; gap: 8px; }
-  .mock .bar { display: flex; gap: 5px; }
-  .mock .bar i { width: 8px; height: 8px; border-radius: 50%; background: var(--line); }
-  .mock .blk { border-radius: 8px; background: var(--soft); }
-  .mock .blk.a { height: 22%; background: var(--c); opacity: .55; }
-  .mock .blk.b { height: 10%; width: 70%; }
-  .mock .row { display: flex; gap: 8px; flex: 1; }
-  .mock .row .blk { flex: 1; }
-  .panel .open {
-    position: absolute; top: 22px; right: 22px; width: 46px; height: 46px; border-radius: 50%;
-    background: var(--ink); color: var(--paper); display: grid; place-items: center;
-    transition: transform .5s var(--ease), background .3s;
+  .proj:hover .big { transform: translateY(-.06em) scale(1.06); }
+  .device { position: absolute; left: 50%; top: 9%; translate: -50% 0; transition: transform .6s var(--ease); }
+  .proj:hover .device { transform: translateY(-8px) rotate(-3deg); }
+  /* phone frame (two overlapping phones) */
+  .device.phones { width: 78%; height: 55%; }
+  .phone {
+    position: absolute; width: 56%; aspect-ratio: 9 / 18.5; background: var(--paper);
+    border: 5px solid #111; border-radius: 18px; overflow: hidden; box-shadow: 0 14px 24px -12px rgba(0,0,0,.5);
   }
-  .panel:hover .open { transform: rotate(-45deg); background: var(--paper); color: var(--ink); }
-  .open svg { width: 20px; height: 20px; }
+  .phone::before { content: ""; position: absolute; top: 4px; left: 50%; width: 32%; height: 6px; margin-left: -16%; background: #111; border-radius: 6px; z-index: 2; }
+  .phone.a { left: 0; top: 6%; transform: rotate(-7deg); }
+  .phone.b { right: 0; top: 0; transform: rotate(6deg); }
+  .phone.b img { object-position: center 70%; }
+  /* laptop frame */
+  .device.laptop { width: 88%; top: 16%; }
+  .laptop .screen { aspect-ratio: 16 / 10.5; border: 5px solid #111; border-bottom-width: 8px; border-radius: 10px 10px 0 0; overflow: hidden; background: var(--paper); position: relative; }
+  .laptop .base { height: 9px; background: linear-gradient(#3a3a3a, #111); margin: 0 -9%; border-radius: 0 0 10px 10px; }
+  .screen img, .phone img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top center; }
+  .mock { position: absolute; inset: 0; padding: 9% 8%; display: flex; flex-direction: column; gap: 6%; background: var(--paper); }
+  .mock i { display: block; border-radius: 5px; background: #eee9e1; }
+  .mock i:nth-child(1) { height: 18%; background: var(--c); opacity: .5; }
+  .mock i:nth-child(2) { height: 7%; width: 70%; }
+  .mock i:nth-child(3) { flex: 1; }
+  .cap { padding: 14px 4px 0; }
+  .cap b { display: block; font-weight: 700; font-size: 14px; letter-spacing: .1em; text-transform: uppercase; }
+  .cap span { display: block; color: var(--muted); font-size: 14px; line-height: 1.45; margin-top: 2px; }
+  .cap em { display: inline-block; margin-top: 8px; font-style: normal; font-weight: 700; font-size: 13px; color: var(--accent-ink); opacity: 0; transform: translateX(-6px); transition: opacity .35s, transform .35s var(--ease); }
+  .proj:hover .cap em, .proj:focus-visible .cap em { opacity: 1; transform: none; }
 
   @media (max-width: 860px) {
-    .panels { flex-direction: column; height: auto; }
-    .panel { flex: none; }
-    .panel:hover, .panel:focus-visible { flex-grow: 0; }
-    .panel:hover, .panel:focus-visible { transform: translateY(-4px); box-shadow: 0 8px 0 var(--ink); }
-    .panel .shot { margin-top: 20px; aspect-ratio: 16 / 10; }
+    .projects { flex-direction: column; gap: 34px; }
+    .proj { flex: none; }
+    .proj:hover, .proj:focus-visible { flex-grow: 0; }
+    .panel { height: clamp(360px, 92vw, 460px); }
+    .device.phones { width: 50%; max-width: 230px; top: 7%; }
+    .device.laptop { width: 74%; max-width: 420px; }
+    .big { font-size: clamp(150px, 42vw, 220px); }
+    .cap em { opacity: 1; transform: none; }
   }
 
   /* ---------- Case study dialog ---------- */
   dialog.case {
     width: min(920px, calc(100vw - 24px)); max-height: calc(100svh - 24px);
-    padding: 0; border: 2.5px solid var(--ink); border-radius: 28px; background: var(--paper); color: var(--ink);
+    padding: 0; border: 2px solid var(--ink); border-radius: 26px; background: var(--paper); color: var(--ink);
     overflow: auto; overscroll-behavior: contain;
   }
   dialog.case::backdrop { background: rgba(11,11,11,.55); backdrop-filter: blur(4px); }
-  dialog.case[open] { animation: rise .55s var(--ease); }
-  dialog.case[open]::backdrop { animation: fade .4s ease; }
-  @keyframes rise { from { opacity: 0; transform: translateY(40px) scale(.97); } to { opacity: 1; transform: none; } }
-  @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
-  .case-top { background: var(--c); padding: clamp(24px, 5vw, 48px); border-bottom: 2.5px solid var(--ink); position: relative; }
+  dialog.case[open] { animation: up .55s var(--ease); }
+  @keyframes up { from { opacity: 0; transform: translateY(40px) scale(.97); } to { opacity: 1; transform: none; } }
+  .case-top { background: var(--c); color: var(--fg, var(--ink)); padding: clamp(24px, 5vw, 48px); position: relative; }
   .case-top .pnum { font-family: var(--display); font-size: 64px; line-height: 1; }
   .case-top h2 { font-family: var(--display); font-weight: 400; font-size: clamp(34px, 5.5vw, 60px); margin-top: 8px; padding-right: 50px; }
   .case-top p { margin: 18px 0 0; font-size: 18px; font-weight: 500; max-width: 640px; }
   .close {
     position: absolute; top: 18px; right: 18px; width: 46px; height: 46px; border-radius: 50%;
-    border: 2px solid var(--ink); background: var(--paper); cursor: pointer; display: grid; place-items: center;
+    border: 2px solid var(--ink); background: var(--paper); color: var(--ink); cursor: pointer; display: grid; place-items: center;
     transition: transform .4s var(--ease), background .25s;
   }
   .close:hover { transform: rotate(90deg); background: var(--ink); color: var(--paper); }
   .close svg { width: 18px; height: 18px; }
   .case-body { padding: clamp(24px, 5vw, 48px); display: grid; gap: 36px; }
   .case-shot { border: 2px solid var(--ink); border-radius: 18px; overflow: hidden; background: var(--soft); }
-  .case-shot img { width: 100%; }
   .case-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px 40px; }
   .case h4 { font-family: var(--display); font-weight: 400; font-size: 24px; margin: 0 0 8px; display: flex; gap: 10px; align-items: baseline; }
   .case h4 small { font-family: var(--body); font-size: 12px; font-weight: 700; color: var(--accent-ink); letter-spacing: .12em; }
@@ -343,13 +333,13 @@
   .metric b { display: block; font-family: var(--display); font-weight: 400; font-size: 38px; line-height: 1; color: var(--accent-ink); }
   .metric span { font-size: 14px; color: var(--muted); }
   .case-cta { display: flex; flex-wrap: wrap; gap: 12px; }
-  .pill.ghost { background: transparent; color: var(--ink) !important; border: 2px solid var(--ink); }
+  .pill.ghost { background: transparent; color: var(--ink) !important; border: 2px solid var(--ink); cursor: pointer; font: inherit; font-weight: 700; }
   .pill.ghost:hover { background: var(--ink); color: var(--paper) !important; }
   @media (max-width: 680px) { .case-grid { grid-template-columns: 1fr; } }
 
   /* ---------- Footer ---------- */
   footer { background: var(--ink); color: var(--paper); margin-top: clamp(72px, 10vw, 120px); padding: clamp(64px, 10vw, 120px) 0 32px; border-radius: clamp(28px, 5vw, 56px) clamp(28px, 5vw, 56px) 0 0; overflow: hidden; }
-  .foot-big { font-family: var(--display); font-weight: 400; font-size: clamp(50px, 11vw, 150px); line-height: .92; }
+  .foot-big { font-family: var(--display); font-weight: 400; font-size: clamp(50px, 11vw, 150px); line-height: .92; margin: 0; }
   .foot-big span { color: var(--accent); display: inline-block; transition: transform .5s var(--ease); }
   .foot-big:hover span { transform: rotate(-8deg) scale(1.08); }
   .foot-row { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 28px; align-items: center; margin-top: clamp(36px, 6vw, 60px); }
@@ -375,7 +365,7 @@
 <body>
 
 <nav class="nav" id="nav">
-  <a class="logo" href="#top" data-bind="initials">YN<span>.</span></a>
+  <a class="logo" href="#top">YN<span>.</span></a>
   <ul>
     <li><a href="#about">About</a></li>
     <li><a href="#info">Experience</a></li>
@@ -387,37 +377,68 @@
 <main id="top">
   <!-- ================= HERO ================= -->
   <header class="hero">
-    <span class="spark s1" aria-hidden="true">✺</span>
-    <span class="spark s2" aria-hidden="true">✦</span>
-    <span class="spark s3" aria-hidden="true">●</span>
-    <span class="spark s4" aria-hidden="true">✳</span>
-    <div>
-      <img class="hero-illustration" id="heroIllo" alt="" />
-      <p class="hero-kicker" data-bind="name">Your Name</p>
-      <h1 class="word" id="heroWord" aria-label="Portfolio '26"></h1>
-      <p class="hero-sub" id="heroSub"></p>
+    <div class="stage">
+      <h1 id="heroWord" aria-label="Portfolio '26"></h1>
+      <p class="hero-name" data-bind="name">Your Name</p>
+      <p class="hero-role" data-bind="role">Aspiring AI Product Manager</p>
+      <div class="avatar" id="avatar">
+        <!-- Illustrated avatar. Replace with your own by adding images/illustration.png -->
+        <svg viewBox="0 0 400 470" role="img" aria-label="Illustrated avatar">
+          <g class="bob">
+            <!-- hair (back) -->
+            <path d="M108 180 C88 60 312 60 292 180 C306 260 318 340 330 418 C290 432 110 432 70 418 C82 340 94 260 108 180 Z" fill="var(--hair)"/>
+            <!-- body / blazer -->
+            <path d="M40 470 C42 405 92 368 200 362 C308 368 358 405 360 470 Z" fill="var(--top)"/>
+            <path d="M156 366 L200 452 L244 366 Z" fill="#fff"/>
+            <path d="M150 368 L200 452 L176 470 L120 470 C126 430 132 400 150 368 Z" fill="#000" opacity=".14"/>
+            <path d="M250 368 L200 452 L224 470 L280 470 C274 430 268 400 250 368 Z" fill="#000" opacity=".14"/>
+            <!-- neck -->
+            <path d="M174 290 L226 290 L230 368 C214 384 186 384 170 368 Z" fill="var(--skin-shade)"/>
+            <!-- ears -->
+            <!-- face -->
+            <path d="M126 200 C126 130 274 130 274 200 C274 268 240 312 200 312 C160 312 126 268 126 200 Z" fill="var(--skin)"/>
+            <!-- blush -->
+            <ellipse cx="156" cy="250" rx="15" ry="9" fill="#FF5B14" opacity=".22"/>
+            <ellipse cx="244" cy="250" rx="15" ry="9" fill="#FF5B14" opacity=".22"/>
+            <!-- brows -->
+            <path d="M152 198 Q168 188 184 196" stroke="var(--hair)" stroke-width="6" fill="none" stroke-linecap="round"/>
+            <path d="M216 196 Q232 188 248 198" stroke="var(--hair)" stroke-width="6" fill="none" stroke-linecap="round"/>
+            <!-- eyes -->
+            <g class="eyes">
+              <ellipse cx="168" cy="224" rx="9" ry="11" fill="#1b1b1b"/>
+              <ellipse cx="232" cy="224" rx="9" ry="11" fill="#1b1b1b"/>
+              <circle cx="171" cy="220" r="3" fill="#fff"/>
+              <circle cx="235" cy="220" r="3" fill="#fff"/>
+            </g>
+            <!-- nose + smile -->
+            <path d="M200 236 Q196 252 204 256" stroke="var(--skin-shade)" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <path d="M178 272 Q200 292 222 272 Q200 282 178 272 Z" fill="#fff" stroke="#7a2f1d" stroke-width="4" stroke-linejoin="round"/>
+            <!-- hair (front fringe + side strands) -->
+            <path d="M120 206 C110 118 178 96 236 108 C286 118 296 170 282 210 C268 168 238 146 204 150 C172 154 146 170 120 206 Z" fill="var(--hair)"/>
+            <path d="M122 190 C106 262 116 330 100 410 L136 404 C140 330 132 262 138 206 Z" fill="var(--hair)"/>
+            <path d="M278 190 C294 262 284 330 300 410 L264 404 C260 330 268 262 262 206 Z" fill="var(--hair)"/>
+            <path d="M190 112 C220 112 252 124 262 150" stroke="#fff" stroke-opacity=".18" stroke-width="5" fill="none" stroke-linecap="round"/>
+          </g>
+        </svg>
+      </div>
     </div>
-    <a class="scroll-cue" href="#about" aria-label="Scroll to about"></a>
   </header>
 
   <!-- ================= ABOUT ================= -->
   <section id="about">
     <div class="wrap about">
-      <div class="lanyard-wrap reveal">
+      <div class="lanyard-wrap">
         <div class="lanyard" id="lanyard">
-          <svg class="strap" viewBox="0 0 70 170" aria-hidden="true">
-            <path d="M8 0 L30 160 L40 160 L62 0" fill="none" stroke="#0b0b0b" stroke-width="14" stroke-linejoin="round"/>
-            <path d="M8 0 L30 160 L40 160 L62 0" fill="none" stroke="#FF5B14" stroke-width="8" stroke-linejoin="round" stroke-dasharray="10 8"/>
+          <svg class="strap" viewBox="0 0 76 190" aria-hidden="true">
+            <path d="M6 0 C14 70 22 130 32 182 L44 182 C54 130 62 70 70 0" fill="none" stroke="#0b0b0b" stroke-width="15" stroke-linejoin="round"/>
+            <path d="M6 0 C14 70 22 130 32 182 L44 182 C54 130 62 70 70 0" fill="none" stroke="#FF5B14" stroke-width="5" stroke-dasharray="1 10" stroke-linecap="round"/>
           </svg>
           <div class="clip"></div>
           <div class="card">
-            <div class="card-head"><span>Product · AI</span><b>Pass '26</b></div>
-            <div class="photo" id="photo">
-              <span class="initials" aria-hidden="true">YN</span>
+            <div class="id">
+              <div class="photo" id="photo"><span class="initials" aria-hidden="true">YN</span></div>
+              <div class="id-meta"><div><b data-bind="firstName">Your</b><small>AI Product · '26</small></div><span>✦</span></div>
             </div>
-            <p class="card-name" data-bind="firstName">Your</p>
-            <p class="card-role">Aspiring AI Product Manager</p>
-            <div class="card-foot"><div class="barcode" aria-hidden="true"></div><span>✦</span></div>
           </div>
         </div>
       </div>
@@ -433,9 +454,9 @@
   </section>
 
   <!-- ================= INFO ================= -->
-  <section class="info reveal" id="info">
+  <section id="info">
     <div class="wrap">
-      <div class="cols">
+      <div class="cols reveal">
         <div class="col">
           <h3><i>01</i>Experience</h3>
           <div id="experience"></div>
@@ -447,26 +468,21 @@
         <div class="col">
           <h3><i>03</i>Contact</h3>
           <ul class="contact-list" id="contact"></ul>
+          <h3 class="tools-h"><i>04</i>Tools</h3>
+          <div class="tools" id="tools"></div>
         </div>
       </div>
-      <div class="tools" id="tools"><h3>Tools</h3></div>
     </div>
   </section>
 
   <!-- ================= WORK ================= -->
   <section id="work">
     <div class="wrap">
-      <div class="work-head reveal">
-        <span class="num n1" aria-hidden="true">01</span>
-        <span class="num n2" aria-hidden="true">02</span>
-        <span class="num n3" aria-hidden="true">03</span>
-        <span class="num n4" aria-hidden="true">04</span>
-        <span class="num n5" aria-hidden="true">✦</span>
-        <span class="num n6" aria-hidden="true">✦</span>
+      <div class="work-head reveal" id="workHead">
         <h2 class="outline">Work</h2>
         <p>Selected case studies. Tap a panel to see the problem, the decisions and the results.</p>
       </div>
-      <div class="panels reveal" id="panels"></div>
+      <div class="projects reveal" id="projects"></div>
     </div>
   </section>
 </main>
@@ -474,7 +490,7 @@
 <dialog class="case" id="case" aria-labelledby="caseTitle"></dialog>
 
 <!-- ================= FOOTER ================= -->
-<footer id="contact-footer">
+<footer>
   <div class="wrap">
     <p class="eyebrow" style="color:var(--accent)">What's next?</p>
     <p class="foot-big">Let's build<br/>something <span>smart.</span></p>
@@ -493,30 +509,37 @@
 /* =====================================================================
    ✏️  EDIT YOUR DETAILS HERE — everything on the page is filled from this.
    Anything in [square brackets] is a placeholder to replace.
-   Images: images/photo.jpg (ID card), images/illustration.png (optional hero),
-           images/project-1.png ... (panel screenshots). Missing images fall back gracefully.
+   Images (all optional, missing ones fall back gracefully):
+     images/illustration.png  — your own cartoon avatar; replaces the drawn one in the hero
+     images/photo.jpg         — photo on the ID card
+     images/project-1.png ... — screenshots shown inside the device mockups
    ===================================================================== */
 const SITE = {
   name: "Your Name",
   firstName: "Your",
   initials: "YN",
+  role: "Aspiring AI Product Manager. Curious about people, obsessed with useful AI.",
   headline: "Aspiring AI Product Manager turning fuzzy problems into useful, human AI products.",
-  heroLine: "<strong>Aspiring AI Product Manager.</strong> I find the real problem, talk to the people who have it, and ship AI that actually helps.",
   about: [
     "[Write 2–3 sentences about who you are: your background, what pulled you toward AI product management, and the kind of problems you love.]",
     "[Add a sentence on how you work, e.g. 'I like to prototype early, talk to users often, and let metrics settle debates.' End with what you're looking for in 2026.]"
   ],
   stickers: ["User research", "LLM prototyping", "Voice AI", "Product strategy", "Metrics & experiments"],
 
+  /* Drawn avatar colours — tweak to look like you */
+  avatar: { skin: "#C98E68", skinShade: "#A9704E", hair: "#1E1512", top: "#FF5B14" },
+
   experience: [
     { dates: "[2025 — Now]", role: "[Role title]", org: "[Company] · [one line on impact]" },
     { dates: "[2024]",       role: "[Internship / role]", org: "[Company] · [one line on impact]" },
-    { dates: "[2023]",       role: "[Role]", org: "[Company] · [one line on impact]" }
+    { dates: "[2023]",       role: "[Role]", org: "[Company] · [one line on impact]" },
+    { dates: "[2022]",       role: "[Role]", org: "[Company] · [one line on impact]" }
   ],
   leadership: [
     { dates: "[2025]", role: "[Club / society role]", org: "[What you led or grew]" },
     { dates: "[2024]", role: "[Hackathon / competition]", org: "[Result, e.g. finalist]" },
-    { dates: "[2023]", role: "[Volunteering / community]", org: "[What you did]" }
+    { dates: "[2023]", role: "[Volunteering / community]", org: "[What you did]" },
+    { dates: "[2023]", role: "[Event / ambassador role]", org: "[What you did]" }
   ],
   contact: {
     email: "[you@example.com]",
@@ -525,12 +548,14 @@ const SITE = {
   },
   tools: ["Figma", "Notion", "Jira", "SQL", "Python", "Amplitude", "ElevenLabs", "Claude / LLM APIs", "Lovable / v0", "Miro"],
 
-  /* Projects: color is any CSS colour; use var(--p1)…var(--p4) for the built-in palette. */
+  /* Projects. color: any CSS colour (var(--p1)…var(--p5) = built-in palette).
+     device: "laptop" or "phone" — the mockup the screenshot is shown in. */
   projects: [
     {
-      title: "Archana — AI Career Guide",
+      title: "Archana",
+      short: "AI career guide you can talk to",
       tagline: "A voice agent that helps students and professionals talk through their next career move.",
-      color: "var(--p1)",
+      color: "var(--p1)", device: "laptop",
       image: "images/project-1.png",
       problem: "Career guidance is expensive, hard to access and often generic. Students and career-changers rarely get a patient, personalised conversation about which paths fit them and what to do next.",
       users: "Students choosing a stream, degree or first job; early-career professionals aiming to grow; people considering a career switch.",
@@ -553,10 +578,9 @@ const SITE = {
       link: "archana.html"
     },
     {
-      title: "[Project Two]",
+      title: "[Project Two]", short: "[One-line description]",
       tagline: "[One-line pitch: what it does and for whom.]",
-      color: "var(--p2)",
-      image: "images/project-2.png",
+      color: "var(--p2)", device: "phone", image: "images/project-2.png",
       problem: "[What pain point did you see? Who has it and how often?]",
       users: "[Primary users and the key insight from talking to them.]",
       built: "[What you shipped: the core feature, the stack, your role.]",
@@ -566,19 +590,25 @@ const SITE = {
       link: "#"
     },
     {
-      title: "[Project Three]",
+      title: "[Project Three]", short: "[One-line description]",
       tagline: "[One-line pitch: what it does and for whom.]",
-      color: "var(--p3)",
-      image: "images/project-3.png",
+      color: "var(--p3)", device: "phone", image: "images/project-3.png",
       problem: "[Problem]", users: "[Users]", built: "[What you built]",
       decisions: ["[Decision]"], metrics: [{ value: "[#]", label: "[metric]" }],
       learnings: ["[Learning]"], link: "#"
     },
     {
-      title: "[Project Four]",
+      title: "[Project Four]", short: "[One-line description]",
       tagline: "[One-line pitch: what it does and for whom.]",
-      color: "var(--p4)",
-      image: "images/project-4.png",
+      color: "var(--p4)", device: "laptop", image: "images/project-4.png",
+      problem: "[Problem]", users: "[Users]", built: "[What you built]",
+      decisions: ["[Decision]"], metrics: [{ value: "[#]", label: "[metric]" }],
+      learnings: ["[Learning]"], link: "#"
+    },
+    {
+      title: "[Project Five]", short: "[One-line description]",
+      tagline: "[One-line pitch: what it does and for whom.]",
+      color: "var(--p5)", device: "phone", image: "images/project-5.png",
       problem: "[Problem]", users: "[Users]", built: "[What you built]",
       decisions: ["[Decision]"], metrics: [{ value: "[#]", label: "[metric]" }],
       learnings: ["[Learning]"], link: "#"
@@ -590,32 +620,46 @@ const SITE = {
 const $ = (s, el = document) => el.querySelector(s);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const pad = n => String(n).padStart(2, "0");
-
 const ICONS = {
   email: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3 7l9 6 9-6"/></svg>',
   linkedin: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 11-.02 5 2.5 2.5 0 01.02-5zM3 9.75h4v11H3v-11zm6.5 0h3.8v1.5h.06c.53-1 1.83-1.8 3.76-1.8 4 0 4.88 2.4 4.88 5.6v5.7h-4v-5c0-1.2 0-2.75-1.7-2.75s-1.95 1.3-1.95 2.65v5.1h-4v-11z"/></svg>',
   github: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 00-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02a9.56 9.56 0 015 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.75c0 .27.18.58.69.48A10 10 0 0012 2z"/></svg>',
-  arrow: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M8 7h9v9"/></svg>',
+  arrow: '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M8 7h9v9"/></svg>',
   close: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>'
 };
 
-// simple bindings
+// text bindings
 document.querySelectorAll("[data-bind]").forEach(el => { el.textContent = SITE[el.dataset.bind] ?? el.textContent; });
 $(".logo").innerHTML = esc(SITE.initials) + "<span>.</span>";
 document.title = `${SITE.name} · Portfolio '26`;
 $("#year").textContent = new Date().getFullYear();
 
-// hero word: "Portfolio" with mixed sizes and angles, plus '26 in accent
-const shapes = [
-  { s: 1.15, r: -8,  y: "0" },   { s: .82,  r: 6,  y: "-.08em" }, { s: 1,   r: -3, y: ".04em" },
-  { s: .9,   r: 10,  y: "-.12em" },{ s: 1.2, r: -6, y: ".02em" },  { s: .78, r: 4,  y: "-.18em" },
-  { s: 1.05, r: -12, y: ".06em" }, { s: .86, r: 8,  y: "-.04em" }, { s: 1.12, r: -4, y: "0" }
+// avatar colours, or swap in images/illustration.png if present
+const av = document.documentElement.style;
+av.setProperty("--skin", SITE.avatar.skin); av.setProperty("--skin-shade", SITE.avatar.skinShade);
+av.setProperty("--hair", SITE.avatar.hair); av.setProperty("--top", SITE.avatar.top);
+const illo = new Image();
+illo.alt = `Illustration of ${SITE.name}`;
+illo.onload = () => { $("#avatar").innerHTML = ""; $("#avatar").append(illo); };
+illo.src = "images/illustration.png";
+
+// hero letters: x/y in % of the stage, size in container width units, rotation
+const LETTERS = [
+  // x/y/s = desktop, m = [x, y, size] on phones
+  { c: "P", x: "3%",  y: "20%", s: "25cqw", r: -6, m: ["1%", "4%", "34cqw"] },
+  { c: "O", x: "16%", y: "44%", s: "17cqw", r: 7,  m: ["21%", "17%", "23cqw"] },
+  { c: "R", x: "19%", y: "8%",  s: "20cqw", r: -3, m: ["37%", "1%", "28cqw"] },
+  { c: "T", x: "31%", y: "0%",  s: "24cqw", r: 5,  m: ["56%", "-1%", "32cqw"] },
+  { c: "f", x: "53%", y: "4%",  s: "23cqw", r: -6, m: ["3%", "36%", "29cqw"] },
+  { c: "o", x: "62%", y: "34%", s: "16cqw", r: 6,  m: ["17%", "52%", "19cqw"] },
+  { c: "l", x: "71%", y: "6%",  s: "24cqw", r: -3, m: ["71%", "33%", "30cqw"] },
+  { c: "i", x: "78%", y: "24%", s: "18cqw", r: 2,  m: ["80%", "43%", "23cqw"] },
+  { c: "o", x: "85%", y: "40%", s: "16cqw", r: 9,  m: ["84%", "58%", "18cqw"] },
+  { c: "'26", x: "85%", y: "1%", s: "8cqw", r: 10, m: ["82%", "2%", "13cqw"], cls: "yr front" }
 ];
-$("#heroWord").innerHTML = [..."Portfolio"].map((ch, i) => {
-  const k = shapes[i];
-  return `<span class="ch" aria-hidden="true" style="--i:${i};--s:${k.s};--r:${k.r}deg;--y:${k.y}">${ch}</span>`;
-}).join("") + `<span class="ch yr" aria-hidden="true" style="--i:10;--r:12deg">'26</span>`;
-$("#heroSub").innerHTML = SITE.heroLine;
+$("#heroWord").innerHTML = LETTERS.map((l, i) =>
+  `<span class="L ${l.cls || ""}" aria-hidden="true" style="--i:${i};--x:${l.x};--y:${l.y};--s:${l.s};--r:${l.r}deg;--mx:${l.m[0]};--my:${l.m[1]};--ms:${l.m[2]}">${l.c}</span>`
+).join("");
 
 // ID card photo (falls back to initials if images/photo.jpg is missing)
 $("#photo .initials").textContent = SITE.initials;
@@ -624,17 +668,12 @@ photo.alt = `Portrait of ${SITE.name}`;
 photo.onload = () => { $("#photo").innerHTML = ""; $("#photo").append(photo); };
 photo.src = "images/photo.jpg";
 
-// optional hero illustration
-const illo = $("#heroIllo");
-illo.onload = () => illo.classList.add("on");
-illo.src = "images/illustration.png";
-
 // about
 $("#aboutText").innerHTML = SITE.about.map(p => `<p>${esc(p)}</p>`).join("");
 $("#stickers").innerHTML = SITE.stickers.map(s => `<span class="sticker">${esc(s)}</span>`).join("");
 
 // info columns
-const items = list => list.map(x => `<div class="item"><small>${esc(x.dates)}</small><b>${esc(x.role)}</b><span>${esc(x.org)}</span></div>`).join("");
+const items = list => list.map(x => `<div class="item"><b>${esc(x.role)}</b><span>${esc(x.org)}</span><small>${esc(x.dates)}</small></div>`).join("");
 $("#experience").innerHTML = items(SITE.experience);
 $("#leadership").innerHTML = items(SITE.leadership);
 const c = SITE.contact;
@@ -643,29 +682,35 @@ const links = [
   { k: "linkedin", label: "LinkedIn", text: c.linkedin.replace(/^https?:\/\/(www\.)?/, ""), href: c.linkedin },
   { k: "github", label: "GitHub", text: c.github.replace(/^https?:\/\/(www\.)?/, ""), href: c.github }
 ];
-$("#contact").innerHTML = links.map(l => `<li><a href="${esc(l.href)}" ${l.k !== "email" ? 'target="_blank" rel="noopener"' : ""}><span class="ico">${ICONS[l.k]}</span><span><span class="lbl">${l.label}</span>${esc(l.text)}</span></a></li>`).join("");
-$("#footLinks").innerHTML = links.map(l => `<a href="${esc(l.href)}" ${l.k !== "email" ? 'target="_blank" rel="noopener"' : ""}>${ICONS[l.k]}${l.label}</a>`).join("");
-$("#tools").insertAdjacentHTML("beforeend", SITE.tools.map(t => `<span class="tool">${esc(t)}</span>`).join(""));
+const ext = l => l.k !== "email" ? 'target="_blank" rel="noopener"' : "";
+$("#contact").innerHTML = links.map(l => `<li><a href="${esc(l.href)}" ${ext(l)} aria-label="${l.label}"><span class="ico">${ICONS[l.k]}</span>${esc(l.text)}</a></li>`).join("");
+$("#footLinks").innerHTML = links.map(l => `<a href="${esc(l.href)}" ${ext(l)}>${ICONS[l.k]}${l.label}</a>`).join("");
+$("#tools").innerHTML = SITE.tools.map(t => `<span class="tool">${esc(t)}</span>`).join("");
 
-// project panels
-const mock = `<div class="mock" aria-hidden="true"><div class="bar"><i></i><i></i><i></i></div><div class="blk a"></div><div class="blk b"></div><div class="row"><div class="blk"></div><div class="blk"></div></div></div>`;
-const shot = (p, cls = "shot") => `<div class="${cls}" style="--c:${p.color}">${mock}<img src="${esc(p.image)}" alt="Screenshot of ${esc(p.title)}" loading="lazy" onerror="this.remove()" style="position:relative"/></div>`;
-$("#panels").innerHTML = SITE.projects.map((p, i) => `
-  <button class="panel" style="--c:${p.color}" data-i="${i}" aria-haspopup="dialog">
-    <span class="pnum">${pad(i + 1)}</span>
-    <span class="open" aria-hidden="true">${ICONS.arrow}</span>
-    <h3 class="ptitle">${esc(p.title)}</h3>
-    <span class="ptag">${esc(p.tagline)}</span>
-    ${shot(p)}
+// work header: scattered numbers, one per project
+$("#workHead").insertAdjacentHTML("afterbegin",
+  SITE.projects.slice(0, 5).map((_, i) => `<span class="num n${i + 1}" aria-hidden="true">${pad(i + 1)}</span>`).join(""));
+
+// project panels with device mockups
+const screen = p => `<div class="mock"><i></i><i></i><i></i></div><img src="${esc(p.image)}" alt="" loading="lazy" onerror="this.remove()"/>`;
+const device = p => p.device === "phone"
+  ? `<div class="device phones"><div class="phone a">${screen(p)}</div><div class="phone b">${screen(p)}</div></div>`
+  : `<div class="device laptop"><div class="screen">${screen(p)}</div><div class="base"></div></div>`;
+$("#projects").innerHTML = SITE.projects.map((p, i) => `
+  <button class="proj" style="--c:${p.color}" data-i="${i}" aria-haspopup="dialog" aria-label="Open case study: ${esc(p.title)}">
+    <div class="panel">${device(p)}<span class="big" aria-hidden="true">${i + 1}</span></div>
+    <div class="cap"><b>${esc(p.title)}</b><span>${esc(p.short)}</span><em>Read case study →</em></div>
   </button>`).join("");
 
 // case study dialog
 const dlg = $("#case");
 const list = arr => `<ul>${arr.map(x => `<li>${esc(x)}</li>`).join("")}</ul>`;
+const isDark = col => /p4|#1|#0/.test(col);
 function openCase(i) {
   const p = SITE.projects[i];
   const live = p.link && p.link !== "#";
   dlg.style.setProperty("--c", p.color);
+  dlg.style.setProperty("--fg", isDark(p.color) ? "#fff" : "#0b0b0b");
   dlg.innerHTML = `
     <div class="case-top">
       <button class="close" aria-label="Close case study">${ICONS.close}</button>
@@ -684,32 +729,27 @@ function openCase(i) {
       <div><h4><small>05</small>Metrics</h4><div class="metrics">${p.metrics.map(m => `<div class="metric"><b>${esc(m.value)}</b><span>${esc(m.label)}</span></div>`).join("")}</div></div>
       <div><h4><small>06</small>Learnings</h4>${list(p.learnings)}</div>
       <div class="case-cta">
-        ${live ? `<a class="pill" href="${esc(p.link)}" target="_blank" rel="noopener">See it live ${ICONS.arrow.replace("<svg", '<svg width="16" height="16"')}</a>` : `<span class="pill ghost" aria-disabled="true">Live link coming soon</span>`}
-        <button class="pill ghost" data-close style="cursor:pointer;font:inherit;font-weight:700">Back to work</button>
+        ${live ? `<a class="pill" href="${esc(p.link)}" target="_blank" rel="noopener">See it live ${ICONS.arrow}</a>` : `<span class="pill ghost" aria-disabled="true">Live link coming soon</span>`}
+        <button class="pill ghost" data-close>Back to work</button>
       </div>
     </div>`;
   dlg.showModal();
   dlg.scrollTop = 0;
 }
-$("#panels").addEventListener("click", e => { const b = e.target.closest(".panel"); if (b) openCase(+b.dataset.i); });
-dlg.addEventListener("click", e => {
-  if (e.target === dlg || e.target.closest(".close, [data-close]")) dlg.close();
-});
+$("#projects").addEventListener("click", e => { const b = e.target.closest(".proj"); if (b) openCase(+b.dataset.i); });
+dlg.addEventListener("click", e => { if (e.target === dlg || e.target.closest(".close, [data-close]")) dlg.close(); });
 
-// lanyard: re-swing on hover
+// lanyard: swing when it first comes into view, and again on hover
 const lanyard = $("#lanyard");
-lanyard.addEventListener("mouseenter", () => {
-  lanyard.classList.remove("again"); void lanyard.offsetWidth; lanyard.classList.add("again");
-});
-
-// scroll reveal + about swing when visible
-const io = new IntersectionObserver(entries => entries.forEach(en => {
-  if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); }
-}), { threshold: .15 });
-document.querySelectorAll(".reveal").forEach(el => io.observe(el));
-// start the swing when the card first comes into view (not while hidden off-screen)
 lanyard.style.animationPlayState = "paused";
 new IntersectionObserver((en, obs) => { if (en[0].isIntersecting) { lanyard.style.animationPlayState = "running"; obs.disconnect(); } }, { threshold: .3 }).observe(lanyard);
+lanyard.addEventListener("mouseenter", () => { lanyard.classList.remove("again"); void lanyard.offsetWidth; lanyard.classList.add("again"); });
+
+// scroll reveal
+const io = new IntersectionObserver(entries => entries.forEach(en => {
+  if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); }
+}), { threshold: .12 });
+document.querySelectorAll(".reveal").forEach(el => io.observe(el));
 
 // nav background on scroll
 const nav = $("#nav");
